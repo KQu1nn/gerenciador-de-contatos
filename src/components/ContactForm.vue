@@ -37,10 +37,27 @@ const phone = ref('');
 const contactsStore = useContactsStore();
 
 const emit = defineEmits(["closeForm"]);
-
+const error = ref('Não foi possivel adicionar Contato');
+const sucess = ref('Contato adicionado com sucesso!');
 function addContact() {
-    contactsStore.newContact(name.value, email.value, phone.value);
+    if(!name.value || !email.value || !phone.value) {
+        console.log(error)
+        return
+    }
+    contactsStore.newContact(
+        name.value,
+        email.value,
+        phone.value
+    );
     emit("closeForm");
+    resetFields();
+    console.log(sucess);
+}
+
+function resetFields() {
+    name.value = '',
+    email.value = '',
+    phone.phone = ''
 }
 
 function closeBtn() {

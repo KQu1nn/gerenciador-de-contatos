@@ -30,6 +30,13 @@ export const useContactsStore = defineStore("contacts", () => {
         );
         console.log(contacts.value)
     }
+    async function delContact(id) {
+        const res = await fetch(`${API_URL}/${id}`, {
+            method: "DELETE"
+        });
 
-    return { contacts, fetchContacts, newContact }
+        contacts.value = contacts.value.filter(contact => contact.id !== id);
+    }
+
+    return { contacts, fetchContacts, newContact, delContact }
 })

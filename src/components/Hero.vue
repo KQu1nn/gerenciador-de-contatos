@@ -15,7 +15,6 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue';
 import { Contact } from 'lucide-vue-next';
 import { Sparkles } from 'lucide-vue-next';
 import { Plus } from 'lucide-vue-next';
