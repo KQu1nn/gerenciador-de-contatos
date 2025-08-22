@@ -1,11 +1,11 @@
 <template>
     <div class="md:px-30 bg-[#fbfaff]">
-        <div class="flex flex-row justify-between items-center py-15">
+        <div class="flex flex-row justify-between items-center pt-15 pb-5 ">
             <div class="flex flex-col gap-2">
                 <h2 class="text-2xl font-bold">Meus Contatos</h2>
-                <p class="text-gray-600">0 contatos cadastrados</p>
+                <p class="text-gray-600">{{ contactsStore.contacts.length }} contatos cadastrados</p>
             </div>
-            <button
+            <button @click="addContact"
                 class="text-white flex flex-row gap-3 items-center bg-gradient-to-r from-blue-600 to-violet-500 cursor-pointer px-4 py-2 rounded-md">
                 <Plus size="16" />
                 <p class="text-md font-medium">Novo Contato</p>
@@ -23,14 +23,24 @@
             </div>
         </div>
     </div>
-    <ContactForm />
 </template>
 <script setup>
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { Plus } from 'lucide-vue-next';
 import { Users } from 'lucide-vue-next';
 import CardContact from './CardContact.vue';
-import ContactForm from './ContactForm.vue';
+import { useContactsStore } from '@/stores/contacts';
 
-const active = ref(false)
+const contactsStore = useContactsStore();
+const active = computed(() => contactsStore.contacts.length === 0)
+
+const emit = defineEmits(["openForm"]);
+
+function addContact() {
+    emit("openForm")
+}
+
+onMounted(() => {
+    contactsStore.fetchContacts();
+})
 </script>
