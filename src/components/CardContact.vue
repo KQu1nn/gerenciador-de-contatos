@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div  v-if="hoverId === contact.id" class="flex flex-row gap-3">
-                <div class="w-9 h-9 flex items-center justify-center cursor-pointer hover:bg-blue-500 hover:text-white rounded-lg">
+                <div @click="editContact(contact)" class="w-9 h-9 flex items-center justify-center cursor-pointer hover:bg-blue-500 hover:text-white rounded-lg">
                     <Edit size="20"/>
                 </div>
                 <div @click="deleteContact(contact.id)" class="w-9 h-9 flex items-center justify-center cursor-pointer hover:bg-red-500 hover:text-white rounded-lg">
@@ -51,8 +51,13 @@ import { ref, onMounted } from 'vue';
 const contactsStore = useContactsStore();
 const hoverId = ref(null);
 
+const emit = defineEmits(["openForm"]);
+
 function deleteContact(id) {
     contactsStore.delContact(id);
+}
+function editContact(contact) {
+    emit("openForm", contact);
 }
 
 onMounted(() => {

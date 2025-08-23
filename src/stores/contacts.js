@@ -37,6 +37,22 @@ export const useContactsStore = defineStore("contacts", () => {
 
         contacts.value = contacts.value.filter(contact => contact.id !== id);
     }
+    async function editContact(id, updateData) {
+        const res = await fetch(`${API_URL}/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updateData)
+        });
 
-    return { contacts, fetchContacts, newContact, delContact }
+        const updateContact = await res.json();
+
+        const index = contacts.value.findIndex(contact => contact.id === id);
+        if(index !== -1) {
+            contacts.value[index] = updateContact;
+        }
+    }
+
+    return { contacts, fetchContacts, newContact, delContact, editContact }
 })

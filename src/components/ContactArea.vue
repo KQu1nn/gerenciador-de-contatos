@@ -13,7 +13,7 @@
         </div>
         <div class="w-full min-h-72 py-10">
             <div class=" flex md:flex-row flex-wrap gap-3">
-                <CardContact />
+                <CardContact @openForm="toggleForm" />
             </div>
 
             <div v-if="active" class="w-full flex flex-col gap-2 items-center justify-center">
@@ -36,6 +36,9 @@ const active = computed(() => contactsStore.contacts.length === 0)
 
 const emit = defineEmits(["openForm"]);
 
+function toggleForm(contact) {
+    emit("openForm", contact);
+}
 function addContact() {
     emit("openForm")
 }
