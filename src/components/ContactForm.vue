@@ -27,9 +27,9 @@
             <div class="flex md:flex-row items-center justify-between">
                 <button
                     class="bg-white text-black border border-gray-200/50 px-15 py-2 rounded-lg cursor-pointer">Cancelar</button>
-                <button
+                <button type="submit" :disabled="loading"
                     class="bg-gradient-to-r from-blue-600 to-violet-500 text-white px-15 py-2 rounded-lg cursor-pointer">
-                    {{ props.isEdit ? "Salvar" : "Adicionar" }}
+                    {{ loading ? 'Salvando...' : (props.isEdit ? "Salvar" : "Adicionar") }}
                 </button>
             </div>
         </form>
@@ -48,6 +48,7 @@ const contactsStore = useContactsStore();
 const emit = defineEmits(["closeForm"]);
 const error = ref('Não foi possivel adicionar Contato');
 const sucess = ref('Contato adicionado com sucesso!');
+const loading = ref(false);
 
 const props = defineProps({
     contact: {
@@ -68,28 +69,38 @@ watch(() => props.contact, (newContact) => {
         resetFields();
     }
 })
-function addContact() {
+async function addContact() {
     if (!name.value || !email.value || !phone.value) {
         console.log(error.value)
         return
     }
-    if (props.isEdit && props.contact) {
-        contactsStore.editContact(props.contact.id, {
-            name: name.value,
-            email: email.value,
-            phone: phone.value
-        })
-    } else {
-        contactsStore.newContact(
-            name.value,
-            email.value,
-            phone.value
-        );
-    }
+    
+    loading.value = true;
+    
+    try {
+        if (props.isEdit && props.contact) {
+            await contactsStore.editContact(props.contact.id, {
+                name: name.value,
+                email: email.value,
+                phone: phone.value
+            });
+        } else {
+            await contactsStore.newContact(
+                name.value,
+                email.value,
+                phone.value
+            );
+        }
 
-    emit("closeForm");
-    resetFields();
-    console.log(sucess.value);
+        console.log(sucess.value);
+        resetFields();
+        emit("closeForm");
+        
+    } catch (err) {
+        console.error(error.value, err);
+    } finally {
+        loading.value = false;
+    }
 }
 
 function resetFields() {
